@@ -79,16 +79,22 @@ module Hominid
       call("listMemberInfo", @list_id, email)
     end
 
-    def members(status = "subscribed", since = "2000-01-01 00:00:00", start = 0, limit = 100)
-      # Get members of a list based on status
-      # Select members based on one of the following statuses:
-      #   'subscribed'
-      #   'unsubscribed'
-      #   'cleaned'
-      #   'updated'
-      #
-      # Select members that have updated their status or profile by providing
-      # a "since" date in the format of YYYY-MM-DD HH:MM:SS
+
+    # Get members of a list based on status
+    # Select members based on one of the following statuses:
+    #   'subscribed'
+    #   'unsubscribed'
+    #   'cleaned'
+    #   'updated'
+    #
+    # Select members that have updated their status or profile by providing
+    # a "since" date in the format of YYYY-MM-DD HH:MM:SS
+    def members(*args)
+      options = args.last.is_a?(::Hash) ? args.pop : {}
+      status = args[0] || options[:status] || "subscribed"
+      since = args[1] || options[:since] || "2000-01-01 00:00:00"
+      start = args[2] || options[:start] || 0
+      limit = args[3] || options[:limit] || 100
       call("listMembers", @list_id, status, since, start, limit)
     end
 
