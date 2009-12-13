@@ -19,10 +19,10 @@ module Hominid
       @config = defaults.merge(config).freeze
       @chimpApi = XMLRPC::Client.new2("http://#{api_endpoint}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
     end
-    
+
     # Security related methods
     # --------------------------------
-    
+
     def add_api_key
       @chimpApi.call("apikeyAdd", *@config.values_at(:username, :password, :api_key))
     end
@@ -35,9 +35,20 @@ module Hominid
       username, password = *@config.values_at(:username, :password)
       @chimpApi.call("apikeys", username, password, include_expired)
     end
-    
+
     # Used internally by Hominid
     # --------------------------------
+
+    def clean_merge_tags(merge_tags)
+      return {} unless merge_tags.is_a? Hash
+      merge_tags.each do |key, value|
+        if merge_tags[key].is_a? String
+          merge_tags[key] = value.gsub("\v", '')
+        elsif merge_tags[key].nil?
+          merge_tags[key] = ''
+        end
+      end
+    end
 
     def apply_defaults_to(options)
       @config.merge(options)
@@ -46,15 +57,28 @@ module Hominid
     def call(method, *args)
       @chimpApi.call(method, @config[:api_key], *args)
     rescue XMLRPC::FaultException => error
+      # Handle common cases for which the Mailchimp API would raise Exceptions
       case error.faultCode
-      when 230
+      when 200
+        raise ListError.new(error)
+      when 214, 230
         raise AlreadySubscribed.new(error)
       when 231
         raise AlreadyUnsubscribed.new(error)
-      when 232
+      when 232, 300
         raise NotExists.new(error)
-      when 233, 215
+      when 215, 233
         raise NotSubscribed.new(error)
+      when 250, 251, 252, 253, 254
+        raise ListMergeError.new(error)
+      when 270
+        raise InvalidInterestGroup.new(error)
+      when 271
+        raise InterestGroupError.new(error)
+      when 301
+        raise CampaignError.new(error)
+      when 330
+        raise InvalidEcommerceOrder.new(error)
       else
         raise HominidError.new(error)
       end
@@ -64,6 +88,4 @@ module Hominid
     end
   end
 end
-    
-    
-    
+

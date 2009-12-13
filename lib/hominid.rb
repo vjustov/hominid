@@ -8,25 +8,37 @@ module Hominid
     end
   end
 
-  class HominidListError < HominidError
+  class AlreadySubscribed < APIError
   end
 
-  class HominidListEmailError < HominidListError
+  class AlreadyUnsubscribed < APIError
   end
 
-  class HominidListMergeError < HominidListError
+  class CampaignError < APIError
   end
 
-  class AlreadySubscribed < HominidListEmailError
+  class InterestGroupError < APIError
   end
 
-  class AlreadyUnsubscribed < HominidListEmailError
+  class InvalidInterestGroup < InterestGroupError
   end
 
-  class NotExists < HominidListEmailError
+  class InvalidEcommerceOrder < APIError
   end
 
-  class NotSubscribed < HominidListEmailError
+  class ListError < APIError
+  end
+
+  class ListEmailError < ListError
+  end
+
+  class ListMergeError < ListError
+  end
+
+  class NotExists < APIError
+  end
+
+  class NotSubscribed < APIError
   end
 
   class HominidCommunicationError < HominidError
@@ -37,15 +49,8 @@ module Hominid
 
 end
 
-begin
-  # inlcude the provided rake task
-  require 'rake'
-  unless Rake::Task.task_defined? "hominid:config"
-    load File.join(File.dirname(__FILE__), '..', 'tasks', 'rails', 'hominid.rake')
-  end
-rescue LoadError
-  # silently skip rake task inclusion unless the rake gem is installed
-end
-
+require 'hominid/list'
+require 'hominid/campaign'
+require 'hominid/helper'
 require 'hominid/base'
 
