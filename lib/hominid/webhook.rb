@@ -3,8 +3,8 @@ module Hominid
   class Webhook < Base
     # Expects a hash of POST data generated from Mailchimp:
     #
-    # "type": "unsubscribe", 
-    # "fired_at": "2009-03-26 21:54:00", 
+    # "type": "unsubscribe",
+    # "fired_at": "2009-03-26 21:54:00",
     # "data[email]": "sample@emailaddress.com"
     #
     # Simple Usage:
@@ -28,7 +28,7 @@ module Hominid
     # Returns an object with the following methods (NOTE: Not all methods are available
     # for all event types. Refer to http://www.mailchimp.com/api/webhooks/ for information
     # on what data will be available for each event):
-    # 
+    #
     # h.event               <= (String)     The event that fired the request. Possible events are:
     #                                       "subscribe", "unsubscribe", "profile", "upemail", "cleaned"
     # h.fired_at            <= (Datetime)   When the webhook request was fired.
@@ -42,73 +42,84 @@ module Hominid
     # h.ip_opt              <= (String)     The opt in IP address.
     # h.ip_signup           <= (String)     The signup IP address.
     #
-    
+
     attr_reader :request
-    
+
     def initialize(*args)
       post_data = args.last
       raise StandardError.new('Please provide the POST data from a Mailchimp webhook request.') unless post_data.is_a?(Hash)
       post_data.merge!({"event" => "#{post_data.delete('type')}"})
       @request = hash_to_object(post_data)
     end
-    
-    
+
+
     def email
       self.request.data.email if self.request.data.email
     end
-    
+
     def email_type
       self.request.data.email_type if self.request.data.email_type
     end
-    
+
     def event
       self.request.event if self.request.event
     end
-    
+
     def fired_at
       self.request.fired_at.to_datetime if self.request.fired_at
     end
-    
+
     def first_name
       self.request.data.merges.fname if self.request.data.merges.fname
     end
-    
+
     def last_name
       self.request.data.merges.lname if self.request.data.merges.lname
     end
-    
+
     def id
       self.request.data.id if self.request.data.id
     end
-    
+
     def interests
       self.request.data.merges.interests.split(',') if self.request.data.merges.interests
     end
-    
+
     def ip_opt
       self.request.data.ip_opt if self.request.data.ip_opt
     end
-    
+
     def ip_signup
       self.request.data.ip_signup if self.request.data.ip_signup
     end
-    
+
     def list_id
       self.request.data.list_id if self.request.data.list_id
     end
-    
+
     def new_email
       self.request.data.new_email if self.request.data.new_email
     end
-    
+
     def old_email
       self.request.data.old_email if self.request.data.old_email
     end
-    
+
     def reason
       self.request.data.reason if self.request.data.reason
+
+    def first_name
+      self.request.data.merges.fname if self.request.data.merges.fname
     end
-    
+
+    def last_name
+      self.request.data.merges.lname if self.request.data.merges.lname
+    end
+
+    def interests
+      self.request.data.merges.interests.split(',') if self.request.data.merges.interests
+    end
+
     private
 
     def hash_to_object(object)
@@ -117,6 +128,7 @@ module Hominid
         object = object.clone
         object.each do |key, value|
           object[key.downcase] = hash_to_object(value)
+          # TODO: Replace keys with lowercase, rather than duplicating
         end
         OpenStruct.new(object)
       when Array
@@ -129,3 +141,4 @@ module Hominid
 
   end
 end
+

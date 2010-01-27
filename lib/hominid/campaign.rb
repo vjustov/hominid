@@ -10,7 +10,7 @@ module Hominid
 
     def initialize(*args)
       options = args.last.is_a?(Hash) ? args.last : {}
-      raise HominidError.new('Please provide a Campaign ID.') unless options[:id]
+      raise StandardError.new('Please provide a Campaign ID.') unless options[:id]
       @campaign_id = options.delete(:id)
       @attributes = options.delete(:attributes)
       super(options)
@@ -169,9 +169,11 @@ module Hominid
       call("campaignStats", @campaign_id)
     end
 
-    def campaign_content()
+    # Get the HTML & text content for a campaign
+    # :for_archive        = (boolean) default true, true returns the content as it would appear in the archive, false returns the raw HTML/text
+    def campaign_content(for_archive = true)
       # Get the content of a campaign
-      call("campaignContent", @campaign_id)
+      call("campaignContent", @campaign_id, for_archive)
     end
 
     def delete_campaign()

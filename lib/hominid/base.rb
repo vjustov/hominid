@@ -2,7 +2,6 @@ module Hominid
   class Base
 
     # MailChimp API Documentation: http://www.mailchimp.com/api/1.2/
-    ## TODO: Auto-switch API url based on API key
     MAILCHIMP_API_VERSION = "1.2"
 
     def initialize(config = {})
@@ -39,6 +38,7 @@ module Hominid
     # Used internally by Hominid
     # --------------------------------
 
+    # handle common cases for which the Mailchimp API would raise Exceptions
     def clean_merge_tags(merge_tags)
       return {} unless merge_tags.is_a? Hash
       merge_tags.each do |key, value|
@@ -82,9 +82,16 @@ module Hominid
       else
         raise HominidError.new(error)
       end
-
+    rescue RuntimeError => error
+      if error.message =~ /Wrong type NilClass\. Not allowed!/
+        hashes = args.select{|a| a.is_a? Hash}
+        errors = hashes.select{|k, v| v.nil? }.collect{ |k, v| "#{k} is Nil." }.join(' ')
+        raise CommunicationError.new(errors)
+      else
+        raise error
+      end
     rescue Exception => error
-      raise HominidCommunicationError.new(error.message)
+      raise CommunicationError.new(error.message)
     end
   end
 end
