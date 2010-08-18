@@ -580,8 +580,12 @@ module Hominid
     # Returns:
     # True if successful.
     #
-    def send_test(campaign_id, emails = {}, send_type = '')
-      call("campaignSendTest", campaign_id, emails, send_type)
+    def send_test(campaign_id, emails = {}, send_type = nil)
+      if send_type
+        call("campaignSendTest", campaign_id, emails, send_type)
+      else
+        call("campaignSendTest", campaign_id, emails)
+      end
     end
     
     # Get the URL to a customized VIP Report for the specified campaign and optionally send an email
