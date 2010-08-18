@@ -10,6 +10,7 @@ module Hominid
 
     def initialize(config = {})
       raise StandardError.new('Please provide your Mailchimp API key.') unless config[:api_key]
+      raise ArgumentError.new('Your Mailchimp API key is malformatted.') unless config[:api_key].include?('-')
       dc = config[:api_key].split('-').last
       defaults = {
         :double_opt_in      => false,
