@@ -7,6 +7,7 @@ module Hominid
     
     # MailChimp API Documentation: http://www.mailchimp.com/api/1.2/
     MAILCHIMP_API_VERSION = "1.2"
+    MAILCHIMP_EXPORT_API_VERSION = "1.0"
 
     def initialize(config = {})
       raise StandardError.new('Please provide your Mailchimp API key.') unless config[:api_key]
@@ -25,8 +26,10 @@ module Hominid
       @config = defaults.merge(config).freeze
       if config[:secure]
         @chimpApi = XMLRPC::Client.new2("https://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
+        @exportApi = "https://#{dc}.api.mailchimp.com/export/#{MAILCHIMP_EXPORT_API_VERSION}/list/"
       else
         @chimpApi = XMLRPC::Client.new2("http://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
+        @exportApi = "http://#{dc}.api.mailchimp.com/export/#{MAILCHIMP_EXPORT_API_VERSION}/list/"
       end
     end
     
@@ -62,6 +65,12 @@ module Hominid
       raise CommunicationError.new(error.message)
     end
     
+    def call_export(list_id, *args)
+      Net::HTTP.get(URI.parse("#{@exportApi}?apikey=#{@config[:api_key]}&id=#{list_id}"))
+    rescue Exception => error
+      raise CommunicationError.new(error.message)
+    end
+
     def clean_merge_tags(merge_tags) # :nodoc:
       return {} unless merge_tags.is_a? Hash
       merge_tags.each do |key, value|

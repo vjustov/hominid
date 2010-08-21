@@ -288,6 +288,10 @@ module Hominid
       call("listMembers", list_id, status, since, start, limit)
     end
     
+    def export(list_id, status = "subscribed", since = "2000-01-01 00:00:00", segment = nil)
+      call_export(list_id)
+    end
+    
     # Get the list of merge tags for a given list, including their name, tag, and required setting.
     #
     # Parameters:
