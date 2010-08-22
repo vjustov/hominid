@@ -287,9 +287,18 @@ module Hominid
     def members(list_id, status = "subscribed", since = "2000-01-01 00:00:00", start = 0, limit = 100)
       call("listMembers", list_id, status, since, start, limit)
     end
-    
-    def export(list_id, status = "subscribed", since = "2000-01-01 00:00:00", segment = nil)
-      call_export(list_id)
+
+    # Use the Mailchimp Export API to get all list members for a list
+    # 
+    # Parameters:
+    # * list_id (String)    = The mailing list ID value.
+    # * status  (String)    = One of subscribed, unsubscribed, cleaned, updated. Defaults to subscribed.
+    #
+    # Returns:
+    # An array of user record structs, keyed by the merge field name
+    #
+    def export(list_id, status=nil)
+      call_export(list_id, status)
     end
     
     # Get the list of merge tags for a given list, including their name, tag, and required setting.

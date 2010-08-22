@@ -8,6 +8,7 @@ module Hominid
     # MailChimp API Documentation: http://www.mailchimp.com/api/1.2/
     MAILCHIMP_API_VERSION = "1.2"
     MAILCHIMP_EXPORT_API_VERSION = "1.0"
+    MAILCHIMP_EXPORT_PATH = "/export/#{MAILCHIMP_EXPORT_API_VERSION}/list/"
 
     def initialize(config = {})
       raise StandardError.new('Please provide your Mailchimp API key.') unless config[:api_key]
@@ -26,10 +27,10 @@ module Hominid
       @config = defaults.merge(config).freeze
       if config[:secure]
         @chimpApi = XMLRPC::Client.new2("https://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
-        @exportApi = "https://#{dc}.api.mailchimp.com/export/#{MAILCHIMP_EXPORT_API_VERSION}/list/"
+        @exportApi = Net::HTTP.new("#{dc}.api.mailchimp.com", 443)
       else
         @chimpApi = XMLRPC::Client.new2("http://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
-        @exportApi = "http://#{dc}.api.mailchimp.com/export/#{MAILCHIMP_EXPORT_API_VERSION}/list/"
+        @exportApi = Net::HTTP.new("#{dc}.api.mailchimp.com", 80)
       end
     end
     
@@ -65,8 +66,22 @@ module Hominid
       raise CommunicationError.new(error.message)
     end
     
-    def call_export(list_id, *args)
-      Net::HTTP.get(URI.parse("#{@exportApi}?apikey=#{@config[:api_key]}&id=#{list_id}"))
+    def call_export(list_id, status)
+      uri = "#{MAILCHIMP_EXPORT_PATH}?apikey=#{@config[:api_key]}&id=#{list_id}"
+      
+      !status.nil? && uri += "&status=#{status}"
+      
+      # Don't parse the whole thing since there could be thousands of records
+      out, keys = [], []
+      @exportApi.request_get(uri).body.each_with_index do |l, i|
+        if i == 0
+          keys = JSON.parse(l).map { |k| k.gsub(" ", "_") }
+        else
+          # Magic! http://snippets.dzone.com/posts/show/302
+          out << Hash[*keys.zip(JSON.parse(l)).flatten]
+        end
+      end
+      out
     rescue Exception => error
       raise CommunicationError.new(error.message)
     end
