@@ -1,89 +1,61 @@
 module Hominid
   class Base
-
+    include Hominid::Campaign
+    include Hominid::Helper
+    include Hominid::List
+    include Hominid::Security
+    
     # MailChimp API Documentation: http://www.mailchimp.com/api/1.2/
     MAILCHIMP_API_VERSION = "1.2"
+    MAILCHIMP_EXPORT_API_VERSION = "1.0"
+    MAILCHIMP_EXPORT_PATH = "/export/#{MAILCHIMP_EXPORT_API_VERSION}/list/"
 
     def initialize(config = {})
-      if defined?(Rails.root) && (!config || config.empty?)
-        config = YAML.load(File.open("#{Rails.root}/config/hominid.yml"))[Rails.env].symbolize_keys
-      end
-      api_endpoint = config[:api_key].split('-').last
-      config.merge(:username => config[:username].to_s, :password => config[:password].to_s)
-      defaults = {:send_welcome       => false,
-                  :double_opt_in      => false,
-                  :update_existing    => true,
-                  :replace_interests  => true,
-                  :merge_tags         => {}}
+      raise StandardError.new('Please provide your Mailchimp API key.') unless config[:api_key]
+      raise ArgumentError.new('Your Mailchimp API key is malformatted.') unless config[:api_key].include?('-')
+      dc = config[:api_key].split('-').last
+      defaults = {
+        :double_opt_in      => false,
+        :merge_tags         => {},
+        :replace_interests  => true,
+        :secure             => false,
+        :send_goodbye       => false,
+        :send_notify        => false,
+        :send_welcome       => false,
+        :update_existing    => true
+      }
       @config = defaults.merge(config).freeze
-      @chimpApi = XMLRPC::Client.new2("http://#{api_endpoint}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
-    end
-
-    # Security related methods
-    # --------------------------------
-
-    def add_api_key
-      @chimpApi.call("apikeyAdd", *@config.values_at(:username, :password, :api_key))
-    end
-
-    def expire_api_key
-      @chimpApi.call("apikeyExpire", *@config.values_at(:username, :password, :api_key))
-    end
-
-    def api_keys(include_expired = false)
-      username, password = *@config.values_at(:username, :password)
-      @chimpApi.call("apikeys", username, password, include_expired)
-    end
-
-    # Used internally by Hominid
-    # --------------------------------
-
-    # handle common cases for which the Mailchimp API would raise Exceptions
-    def clean_merge_tags(merge_tags)
-      return {} unless merge_tags.is_a? Hash
-      merge_tags.each do |key, value|
-        if merge_tags[key].is_a? String
-          merge_tags[key] = value.gsub("\v", '')
-        elsif merge_tags[key].nil?
-          merge_tags[key] = ''
-        end
+      if config[:secure]
+        @chimpApi = XMLRPC::Client.new2("https://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
+        @exportApi = Net::HTTP.new("#{dc}.api.mailchimp.com", 443)
+      else
+        @chimpApi = XMLRPC::Client.new2("http://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
+        @exportApi = Net::HTTP.new("#{dc}.api.mailchimp.com", 80)
       end
     end
-
-    def apply_defaults_to(options)
+    
+    def apply_defaults_to(options) # :nodoc:
       @config.merge(options)
     end
-
-    def call(method, *args)
+    
+    def call(method, *args) # :nodoc:
       @chimpApi.call(method, @config[:api_key], *args)
     rescue XMLRPC::FaultException => error
       # Handle common cases for which the Mailchimp API would raise Exceptions
       case error.faultCode
-      when 200
+      when 100..199
+        raise UserError.new(error)
+      when 200..299
         raise ListError.new(error)
-      when 214, 230
-        raise AlreadySubscribed.new(error)
-      when 231
-        raise AlreadyUnsubscribed.new(error)
-      when 232, 300
-        raise NotExists.new(error)
-      when 215, 233
-        raise NotSubscribed.new(error)
-      when 250, 251, 252, 253, 254
-        raise ListMergeError.new(error)
-      when 270
-        raise InvalidInterestGroup.new(error)
-      when 271
-        raise InterestGroupError.new(error)
-      when 301
+      when 300..399
         raise CampaignError.new(error)
-      when 330
-        raise InvalidEcommerceOrder.new(error)
+      when 500..599
+        raise ValidationError.new(error)
       else
-        raise HominidError.new(error)
+        raise APIError.new(error)
       end
     rescue RuntimeError => error
-      if error.message =~ /Wrong type NilClass\. Not allowed!/
+      if error.message =~ /Wrong type!/
         hashes = args.select{|a| a.is_a? Hash}
         errors = hashes.select{|k, v| v.nil? }.collect{ |k, v| "#{k} is Nil." }.join(' ')
         raise CommunicationError.new(errors)
@@ -93,6 +65,53 @@ module Hominid
     rescue Exception => error
       raise CommunicationError.new(error.message)
     end
+    
+    def call_export(list_id, status)
+      uri = "#{MAILCHIMP_EXPORT_PATH}?apikey=#{@config[:api_key]}&id=#{list_id}"
+      
+      !status.nil? && uri += "&status=#{status}"
+      
+      # Don't parse the whole thing since there could be thousands of records
+      out, keys = [], []
+      @exportApi.request_get(uri).body.each_with_index do |l, i|
+        if i == 0
+          keys = JSON.parse(l).map { |k| k.gsub(" ", "_") }
+        else
+          # Magic! http://snippets.dzone.com/posts/show/302
+          out << Hash[*keys.zip(JSON.parse(l)).flatten]
+        end
+      end
+      out
+    rescue Exception => error
+      raise CommunicationError.new(error.message)
+    end
+
+    def clean_merge_tags(merge_tags) # :nodoc:
+      return {} unless merge_tags.is_a? Hash
+      merge_tags.each do |key, value|
+        if merge_tags[key].is_a? String
+          merge_tags[key] = value.gsub("\v", '')
+        elsif merge_tags[key].nil?
+          merge_tags[key] = ''
+        end
+      end
+    end
+    
+    def hash_to_object(object) # :nodoc:
+      return case object
+      when Hash
+        object = object.clone
+        object.each do |key, value|
+          object[key.downcase] = hash_to_object(value)
+        end
+        OpenStruct.new(object)
+      when Array
+        object = object.clone
+        object.map! { |i| hash_to_object(i) }
+      else
+        object
+      end
+    end
+
   end
 end
-
