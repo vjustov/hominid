@@ -4,7 +4,7 @@ module Hominid
     include Hominid::Helper
     include Hominid::List
     include Hominid::Security
-    
+
     # MailChimp API Documentation: http://www.mailchimp.com/api/1.2/
     MAILCHIMP_API_VERSION = "1.2"
     MAILCHIMP_EXPORT_API_VERSION = "1.0"
@@ -33,11 +33,11 @@ module Hominid
         @exportApi = Net::HTTP.new("#{dc}.api.mailchimp.com", 80)
       end
     end
-    
+
     def apply_defaults_to(options) # :nodoc:
       @config.merge(options)
     end
-    
+
     def call(method, *args) # :nodoc:
       @chimpApi.call(method, @config[:api_key], *args)
     rescue XMLRPC::FaultException => error
@@ -65,15 +65,18 @@ module Hominid
     rescue Exception => error
       raise CommunicationError.new(error.message)
     end
-    
+
     def call_export(list_id, status)
       uri = "#{MAILCHIMP_EXPORT_PATH}?apikey=#{@config[:api_key]}&id=#{list_id}"
-      
+
       !status.nil? && uri += "&status=#{status}"
-      
+
       # Don't parse the whole thing since there could be thousands of records
       out, keys = [], []
-      @exportApi.request_get(uri).body.each_with_index do |l, i|
+      body = @exportApi.request_get(uri).body
+      lines = body.send(body.respond_to?(:lines) ? :lines : :to_s).to_a
+
+      lines.each_with_index do |l, i|
         if i == 0
           keys = JSON.parse(l).map { |k| k.gsub(" ", "_") }
         else
@@ -96,7 +99,7 @@ module Hominid
         end
       end
     end
-    
+
     def hash_to_object(object) # :nodoc:
       return case object
       when Hash
@@ -115,3 +118,4 @@ module Hominid
 
   end
 end
+
