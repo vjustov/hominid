@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{hominid}
-  s.version = "2.1.8"
+  s.version = "2.1.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brian Getting", "Michael Str\303\274der"]
-  s.date = %q{2010-09-04}
+  s.date = %q{2010-09-07}
   s.description = %q{Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp email marketing service API.}
   s.email = %q{brian@terra-firma-design.com}
   s.extra_rdoc_files = [
@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
     "test/hominid_test.rb",
      "test/test_helper.rb"
   ]
-
+  
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3

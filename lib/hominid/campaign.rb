@@ -565,10 +565,9 @@ module Hominid
     #
     # Returns:
     # True if successful.
-    def send(campaign_id)
+    def send_now(campaign_id)
       call("campaignSendNow", campaign_id)
     end
-    alias :send_now :send
     
     # Send a test of this campaign to the provided email address(es).
     #
