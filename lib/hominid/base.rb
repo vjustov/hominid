@@ -22,14 +22,15 @@ module Hominid
         :send_goodbye       => false,
         :send_notify        => false,
         :send_welcome       => false,
+        :timeout            => nil,
         :update_existing    => true
       }
       @config = defaults.merge(config).freeze
       if config[:secure]
-        @chimpApi = XMLRPC::Client.new2("https://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
+        @chimpApi = XMLRPC::Client.new2("https://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/", nil, timeout)
         @exportApi = Net::HTTP.new("#{dc}.api.mailchimp.com", 443)
       else
-        @chimpApi = XMLRPC::Client.new2("http://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/")
+        @chimpApi = XMLRPC::Client.new2("http://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/", nil, timeout)
         @exportApi = Net::HTTP.new("#{dc}.api.mailchimp.com", 80)
       end
     end
