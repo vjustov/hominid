@@ -27,10 +27,10 @@ module Hominid
       }
       @config = defaults.merge(config).freeze
       if config[:secure]
-        @chimpApi = XMLRPC::Client.new2("https://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/", nil, timeout)
+        @chimpApi = XMLRPC::Client.new2("https://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/", nil, config[:timeout])
         @exportApi = Net::HTTP.new("#{dc}.api.mailchimp.com", 443)
       else
-        @chimpApi = XMLRPC::Client.new2("http://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/", nil, timeout)
+        @chimpApi = XMLRPC::Client.new2("http://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/", nil, config[:timeout])
         @exportApi = Net::HTTP.new("#{dc}.api.mailchimp.com", 80)
       end
     end
