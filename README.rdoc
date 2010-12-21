@@ -25,9 +25,9 @@ You can then run any of the methods that you find in the {Mailchimp API Document
 	
 The {Mailchimp API}[http://www.mailchimp.com/api/1.3/] now supports pagination for some methods, so certain methods will have the following response:
 
-  h.lists['total'] 	=> 4
-  h.lists['data]		=> outputs an array of your mailing lists
-	h.lists['data'].first		=> {"id" => "XXXXXXX", "web_id" => 1234567, "name" => "My Mailing List", ...}
+  h.lists['total']        => 4
+  h.lists['data']         => outputs an array of your mailing lists
+	h.lists['data'].first   => {"id" => "XXXXXXX", "web_id" => 1234567, "name" => "My Mailing List", ...}
 
 Please note that as of version 3.0.0 Hominid no longer includes support for the {Mailchimp Export API}[http://www.mailchimp.com/api/export/].
 
