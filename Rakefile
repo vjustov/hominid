@@ -19,14 +19,6 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp email marketing service API.}
   gem.email = "brian@terra-firma-design.com"
   gem.authors = ["Brian Getting"]
-  # Include your dependencies below. Runtime dependencies are required when using your gem,
-  # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
-  #  gem.add_runtime_dependency 'jabber4r', '> 0.1'
-  gem.add_development_dependency 'bundler', '> 1.0.0'
-  gem.add_development_dependency 'jeweler', '> 1.5.2'
-  gem.add_development_dependency 'mocha', '> 0.9.10'
-  gem.add_development_dependency 'rcov', '> 0.9.9'
-  gem.add_development_dependency 'shoulda', '> 2.11.3'
 end
 Jeweler::RubygemsDotOrgTasks.new
 
