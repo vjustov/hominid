@@ -12,8 +12,8 @@ module Hominid
     end
     
     # Find a campaign by name
-    def find_campaigns_by_title(campaign_title)
-      campaigns({:title => campaign_title})['data']
+    def find_campaigns_by_title(campaign_title, *args)
+      campaigns({:title => campaign_title}, *args)['data']
     end
     
     # Find campaigns by list name
