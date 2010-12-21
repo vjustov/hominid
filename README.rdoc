@@ -35,9 +35,9 @@ Please note that as of version 3.0.0 Hominid no longer includes support for the 
 
 Hominid includes some finder methods for campaigns (see Hominid::Campaign) and lists (see Hominid::List) to help with finding each of these resources:
 
-	h.find_list_by_name('my_mailing_list')
-	h.find_list_id_by_name('my_mailing_list')
-	h.find_campaigns_by_list_name('my_mailing_list')
+  h.find_list_by_name('my_mailing_list')
+  h.find_list_id_by_name('my_mailing_list')
+  h.find_campaigns_by_list_name('my_mailing_list')
 
 == Contributing to hominid
  
