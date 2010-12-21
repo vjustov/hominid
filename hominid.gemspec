@@ -48,22 +48,37 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_development_dependency(%q<mocha>, [">= 0.9.9"])
+      s.add_development_dependency(%q<mocha>, [">= 0.9.10"])
       s.add_development_dependency(%q<rcov>, [">= 0.9.9"])
       s.add_development_dependency(%q<shoulda>, [">= 2.11.3"])
+      s.add_development_dependency(%q<bundler>, ["> 1.0.0"])
+      s.add_development_dependency(%q<jeweler>, ["> 1.5.2"])
+      s.add_development_dependency(%q<mocha>, ["> 0.9.10"])
+      s.add_development_dependency(%q<rcov>, ["> 0.9.9"])
+      s.add_development_dependency(%q<shoulda>, ["> 2.11.3"])
     else
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_dependency(%q<mocha>, [">= 0.9.9"])
+      s.add_dependency(%q<mocha>, [">= 0.9.10"])
       s.add_dependency(%q<rcov>, [">= 0.9.9"])
       s.add_dependency(%q<shoulda>, [">= 2.11.3"])
+      s.add_dependency(%q<bundler>, ["> 1.0.0"])
+      s.add_dependency(%q<jeweler>, ["> 1.5.2"])
+      s.add_dependency(%q<mocha>, ["> 0.9.10"])
+      s.add_dependency(%q<rcov>, ["> 0.9.9"])
+      s.add_dependency(%q<shoulda>, ["> 2.11.3"])
     end
   else
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-    s.add_dependency(%q<mocha>, [">= 0.9.9"])
+    s.add_dependency(%q<mocha>, [">= 0.9.10"])
     s.add_dependency(%q<rcov>, [">= 0.9.9"])
     s.add_dependency(%q<shoulda>, [">= 2.11.3"])
+    s.add_dependency(%q<bundler>, ["> 1.0.0"])
+    s.add_dependency(%q<jeweler>, ["> 1.5.2"])
+    s.add_dependency(%q<mocha>, ["> 0.9.10"])
+    s.add_dependency(%q<rcov>, ["> 0.9.9"])
+    s.add_dependency(%q<shoulda>, ["> 2.11.3"])
   end
 end
 
