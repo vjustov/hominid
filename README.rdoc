@@ -14,20 +14,20 @@ You will need a {Mailchimp}[http://eepurl.com/ew8J] account. Once you have your 
 
 Please refer to the {Mailchimp API Documentation}[http://www.mailchimp.com/api/1.3/] for information about what methods are available, the arguments that can be passed to each method, and the output that the API will return. Start by creating a Hominid object:
 
-	h = Hominid::API.new('your_api_key')
+  h = Hominid::API.new('your_api_key')
 
 You can then run any of the methods that you find in the {Mailchimp API Documentation}[http://www.mailchimp.com/api/1.3/] against it. Simply convert the names to the more Ruby-like underscored versions. You do not need to pass your api_key to each method, as that is done automatically for you:
 
-	h.get_account_details
-	h.lists
-	h.campaign_create('regular', {:list_id => 'list_id', ...}, {:html => 'Campaign HTML content', ...})
-	h.template_add('template_name', 'Template HTML Code')
+  h.get_account_details
+  h.lists
+  h.campaign_create('regular', {:list_id => 'list_id', ...}, {:html => 'Campaign HTML content', ...})
+  h.template_add('template_name', 'Template HTML Code')
 	
 The {Mailchimp API}[http://www.mailchimp.com/api/1.3/] now supports pagination for some methods, so certain methods will have the following response:
 
   h.lists['total']        => 4
   h.lists['data']         => outputs an array of your mailing lists
-	h.lists['data'].first   => {"id" => "XXXXXXX", "web_id" => 1234567, "name" => "My Mailing List", ...}
+  h.lists['data'].first   => {"id" => "XXXXXXX", "web_id" => 1234567, "name" => "My Mailing List", ...}
 
 Please note that as of version 3.0.0 Hominid no longer includes support for the {Mailchimp Export API}[http://www.mailchimp.com/api/export/].
 
