@@ -1,5 +1,15 @@
-.DS_Store
-pkg/*
-pkg/*.*
-.svn
+# rcov generated
+coverage
+
+# rdoc generated
 rdoc
+
+# yard generated
+doc
+.yardoc
+
+# bundler
+.bundle
+
+# jeweler generated
+pkg

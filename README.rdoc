@@ -1,114 +1,50 @@
 = Hominid
 
-Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp[http://eepurl.com/ew8J] email marketing service API ({version 1.2}[http://www.mailchimp.com/api/1.2/]).
-
-== Installation
-
-  sudo gem install hominid
+Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp[http://eepurl.com/ew8J] API.
 
 == Requirements
 
 You will need a Mailchimp[http://eepurl.com/ew8J] account. Once you have your Mailchimp account set up, you will need to {generate an API key}[http://admin.mailchimp.com/account/api/] in order to get started using Hominid.
 
+== Installation
+
+  sudo gem install hominid
+
 == Usage
 
-Hominid is intended to be a complete Ruby wrapper for working with the Mailchimp API. As of release 2.0.2, all methods available from the Mailchimp API (Version 1.2) are available. Please note in order to use some methods you will need to have {A.I.M. Reports}[https://admin.mailchimp.com/account/addons] installed on your Mailchimp account.
+Please refer to the Mailchimp API Documentation[http://www.mailchimp.com/api/1.3/] for information about what methods are available, the arguments that can be passed to each method, and the output that the API will return. Start by creating a Hominid object:
 
-You will need to pass your Mailchimp API key to get started:
+	h = Hominid::API.new('your_api_key')
 
-  h = Hominid::Base.new({:api_key => API_KEY})
+You can then run any of the methods that you find in the Mailchimp API Documentation[http://www.mailchimp.com/api/1.3/] against it. Simply convert the names to the more Ruby-like underscored versions. You do not need to pass your api_key to each method, as that is done automatically for you:
 
-You can also pass in any other config options that you would like to change from the defaults. Take a look at Hominid::Base to see what the default values are.
+	h.account_details
+	h.lists
+	h.campaign_create('regular', {:list_id => 'list_id', ...}, {:html => 'Campaign HTML content', ...})
+	h.template_add('template_name', 'Template HTML Code')
 
-Once you have created a Hominid object, you can begin interacting with the Mailchimp account that your API key is associated with.
+Please note that as of version 3.0.0 Hominid no longer includes support for the Mailchimp Export API[http://www.mailchimp.com/api/export/].
 
-=== Working with Lists
+== Examples
 
-We have provided some finder methods to make working with your mailing lists easier:
+Hominid includes some finder methods for campaigns (see Hominid::Campaign) and lists (see Hominid::List) to help with finding each of these resources:
 
-  lists = h.lists
-  list = h.find_list_by_name("Mailing List Name")
-  list = h.find_list_by_id("List ID")
-  list = h.find_list_by_web_id("List Web ID")</code></pre>
+	h.find_list_by_name('my_mailing_list')
+	h.find_list_id_by_name('my_mailing_list')
+	h.find_campaigns_by_list_name('my_mailing_list')
 
-There are also finders for easily getting at List ID's, which are required for nearly all the list methods:
-
-  list_id = h.find_list_id_by_name("Mailing List Name")
-  list_id_ = h.find_list_id_by_web_id("List Web ID")
-
-This means that you can _(for example)_ subscribe someone to a particular mailing list:
-
-  h.subscribe(h.find_list_id_by_name("Mailing List Name"), "email@domain.com", {:FNAME => "Bob", :LNAME => "Smith"}, {:email_type => 'html'})
-
-Or to update a subscriber to a particular list:
-
-  h.update_member(h.find_list_id_by_name("Mailing List Name"), "old_email@domain.com", {:EMAIL => "new_email_@domain.com"}, 'html')
-
-Take a look at Hominid::List to see the methods that are available for interacting with your lists.
-
-=== Working with Campaigns
-
-We have provided some finder methods to make working with your campaigns easier:
-
-  campaigns = h.campaigns
-  campaigns = h.find_campaigns_by_list_name("Mailing List Name")
-  campaigns = h.find_campaigns_by_list_id("Mailing List ID")
-  campaigns = h.find_campaigns_by_type("regular")
-  campaign = h.find_campaign_by_id("Campaign ID")
-  campaign = h.find_campaign_by_title("Campaign Title")
-
-To create a new campaign, use the +create_campaign+ method:
-
-  new_campaign = h.create_campaign(...)
-
-Take a look at Hominid::Campaign to see the methods that are available for interacting with your campaigns.
-
-=== Mailchimp Helper Methods
-
-There are a series of helper methods that are also made available with the Hominid gem. For example, to retrieve information about the Mailchimp account associated with your API key, simply:
-
-  account_details_ = h.account_details
-
-In this case, the +account_details+ object can be accessed like:
-
-  account_details.contact.company
-  account_details.orders
-
-Take a look at Hominid::Helper to see the helper methods that are available.
-
-=== Mailchimp Security Methods
-
-There are a couple of security methods that are also made available with the Hominid gem. These are primarily used for dealing with API keys, and require your Mailchimp account username and password:
-
-  h.api_keys('username', 'password')
-
-Take a look at Hominid::Security to see the security methods that are available.
-
-== Contributors
-
-Hominid is maintained by {Brian Getting}[http://terra-firma-design.com]. A very special thank-you to {Michael Strüder}[http://github.com/mikezter] for all of his hard work. Also, Hominid wouldn't be anywhere near as awesome as it is today without fantastic contributions and inspiration from:
-
-* {Alan Harper}[http://github.com/aussiegeek]
-* {Will}[http://github.com/willinfront]
-* {Ben Woosley}[http://github.com/Empact]
-* {banker}[http://github.com/banker]
-* {Kristoffer Renholm}[http://github.com/renholm]
-* {Wiktor Schmidt}[http://github.com/netguru]
-* {ron}[http://github.com/ron]
-* {Matthew Carlson}[http://mandarinsoda.com/]
-* {Kelly Mahan}[http://digimedia.com/]
-* {C.G. Brown}[http://www.projectlocker.com/]
-* {Bill Abney}[http://github.com/babney]
-* {David Rice}[http://github.com/davidjrice]
-
-== Note on Patches/Pull Requests
-
-1. Fork the project.
-2. Make your feature addition or bug fix.
-3. Add tests for it. This is important so I don't break it in a future version unintentionally.
-4. Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-5. Send me a pull request. Bonus points for topic branches.
+== Contributing to hominid
+ 
+* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
+* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
+* Fork the project
+* Start a feature/bugfix branch
+* Commit and push until you are happy with your contribution
+* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
+* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
 == Copyright
 
-Copyright (c) 2009 Brian Getting. See LICENSE for details.
+Copyright (c) 2010 Brian Getting. See LICENSE.txt for
+further details.
+

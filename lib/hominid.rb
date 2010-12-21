@@ -1,40 +1,65 @@
-require 'json'
+# TODO: Write tests (include mocks for API calls) -- refer to Koala testing for mocks.
+require 'openssl'
 require 'xmlrpc/client'
-require 'ostruct'
+
+require 'hominid/campaign'
+require 'hominid/list'
+require 'hominid/security'
 
 module Hominid
+  class API
+    # Blank Slate
+    instance_methods.each do |m|
+      undef_method m unless m.to_s =~ /^__|object_id|method_missing|respond_to?/
+    end
+    
+    include Hominid::Campaign
+    include Hominid::List
+    include Hominid::Security
+    
+    # MailChimp API Documentation: http://www.mailchimp.com/api/1.3/
+    MAILCHIMP_API_VERSION = "1.3"
 
-  class StandardError < ::StandardError
+    # Initialize with an API key and config options
+    def initialize(api_key, config = {})
+      raise ArgumentError.new('Your Mailchimp API key appears to be malformed') unless api_key.include?('-')
+      dc = api_key.split('-').last
+      defaults = {
+        :api_version        => MAILCHIMP_API_VERSION,
+        :secure             => false,
+        :timeout            => nil
+      }
+      protocol = @config[:secure] ? 'https' : 'http'
+      @api_key = api_key
+      @config = defaults.merge(config).freeze
+      @chimpApi = XMLRPC::Client.new2("#{protocol}://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/", nil, config[:timeout])
+    end
+
+    def method_missing(api_method, *args) # :nodoc:
+      @chimpApi.call(api_method.to_s.camelize_api_method_name, @api_key, *args)
+    rescue XMLRPC::FaultException => error
+      super if error.faultCode == -32601
+      raise APIError.new(error)
+    end
+    
+    def respond_to?(api_method)
+      @chimpApi.call(api_method, @api_key)
+    rescue XMLRPC::FaultException => error
+      error.faultCode == -32601 ? false : true 
+    end
+
   end
-
+  
   class APIError < StandardError
     def initialize(error)
       super("<#{error.faultCode}> #{error.message}")
     end
   end
-  
-  class CampaignError < APIError
-  end
-  
-  class ListError < APIError
-  end
-  
-  class UserError < APIError
-  end
-  
-  class ValidationError < APIError
-  end
 
-  class CommunicationError < StandardError
-    def initialize(message)
-      super(message)
-    end
-  end
-  
 end
 
-require 'hominid/campaign'
-require 'hominid/helper'
-require 'hominid/list'
-require 'hominid/security'
-require 'hominid/base'
+class String
+  def camelize_api_method_name
+    self.to_s[0].chr.downcase + self.gsub(/(?:^|_)(.)/) { $1.upcase }[1..self.size]
+  end
+end
