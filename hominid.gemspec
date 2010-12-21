@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "hominid.gemspec",
     "lib/hominid.rb",
     "lib/hominid/campaign.rb",
     "lib/hominid/list.rb",
