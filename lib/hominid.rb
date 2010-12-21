@@ -1,4 +1,4 @@
-# TODO: Write tests (include mocks for API calls) -- refer to Koala testing for mocks.
+# TODO: Write tests (include mocks for API calls)
 require 'openssl'
 require 'xmlrpc/client'
 
@@ -32,7 +32,7 @@ module Hominid
       @config = defaults.merge(config).freeze
       protocol = @config[:secure] ? 'https' : 'http'
       @api_key = api_key
-      @chimpApi = XMLRPC::Client.new2("#{protocol}://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/", nil, config[:timeout])
+      @chimpApi = XMLRPC::Client.new2("#{protocol}://#{dc}.api.mailchimp.com/#{@config[:api_version]}/", nil, @config[:timeout])
     end
 
     def method_missing(api_method, *args) # :nodoc:
