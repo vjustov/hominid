@@ -29,9 +29,9 @@ module Hominid
         :secure             => false,
         :timeout            => nil
       }
+      @config = defaults.merge(config).freeze
       protocol = @config[:secure] ? 'https' : 'http'
       @api_key = api_key
-      @config = defaults.merge(config).freeze
       @chimpApi = XMLRPC::Client.new2("#{protocol}://#{dc}.api.mailchimp.com/#{MAILCHIMP_API_VERSION}/", nil, config[:timeout])
     end
 
