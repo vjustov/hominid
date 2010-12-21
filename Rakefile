@@ -15,8 +15,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "hominid"
   gem.homepage = "http://github.com/bgetting/hominid"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Hominid is a Ruby wrapper for the Mailchimp API}
+  gem.description = %Q{Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp email marketing service API.}
   gem.email = "brian@terra-firma-design.com"
   gem.authors = ["Brian Getting"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
