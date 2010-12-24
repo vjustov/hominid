@@ -22,7 +22,7 @@ You can then run any of the methods that you find in the {Mailchimp API Document
   h.lists
   h.list_subscribe('XXXXXXXXXX', 'joe@public.com', [], 'html', false, true, true, false)
   h.list_batch_subscribe('XXXXXXXXXX', [{:EMAIL => 'joe@public.com', :EMAIL_TYPE => 'html'}, {:EMAIL => 'jane@doe.com', :EMAIL_TYPE => 'html'}])
-  h.campaign_create('regular', {:list_id => 'list_id', ...}, {:html => 'Campaign HTML content', ...})
+  h.campaign_create('regular', {:list_id => 'XXXXXXXXXX', ...}, {:html => 'Campaign HTML content', ...})
   h.template_add('template_name', 'Template HTML Code')
   h.list_interest_grouping_add('XXXXXXXXXX', 'Grouping Title', 'hidden', ['First Group', 'Second Group', 'Third Group'])
   h.list_static_segment_add('Sample Static Segment')
