@@ -13,7 +13,7 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "hominid"
-  gem.homepage = "http://github.com/bgetting/hominid"
+  gem.homepage = "http://github.com/terra-firma/hominid"
   gem.license = "MIT"
   gem.summary = %Q{Hominid is a Ruby wrapper for the Mailchimp API}
   gem.description = %Q{Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp email marketing service API.}
