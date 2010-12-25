@@ -22,7 +22,7 @@ module Hominid
 
     # Initialize with an API key and config options
     def initialize(api_key, config = {})
-      raise ArgumentError.new('Your Mailchimp API key appears to be malformed') unless api_key.include?('-')
+      raise ArgumentError.new('Your Mailchimp API key appears to be malformed.') unless api_key.include?('-')
       dc = api_key.split('-').last
       defaults = {
         :api_version        => MAILCHIMP_API_VERSION,
