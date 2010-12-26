@@ -42,7 +42,7 @@ module Hominid
       raise APIError.new(error)
     end
     
-    def respond_to?(api_method)
+    def respond_to?(api_method) # :nodoc:
       @chimpApi.call(api_method, @api_key)
     rescue XMLRPC::FaultException => error
       error.faultCode == -32601 ? false : true 
