@@ -36,7 +36,7 @@ module Hominid
     end
 
     def method_missing(api_method, *args) # :nodoc:
-      @chimpApi.call(api_method.to_s.camelize_api_method_name, @api_key, *args)
+      @chimpApi.call(camelize_api_method_name(api_method.to_s), @api_key, *args)
     rescue XMLRPC::FaultException => error
       super if error.faultCode == -32601
       raise APIError.new(error)
@@ -47,7 +47,12 @@ module Hominid
     rescue XMLRPC::FaultException => error
       error.faultCode == -32601 ? false : true 
     end
+    
+    private
 
+    def camelize_api_method_name(str)
+      str.to_s[0].chr.downcase + str.gsub(/(?:^|_)(.)/) { $1.upcase }[1..str.size]
+    end
   end
   
   class APIError < StandardError
@@ -56,10 +61,4 @@ module Hominid
     end
   end
 
-end
-
-class String
-  def camelize_api_method_name
-    self.to_s[0].chr.downcase + self.gsub(/(?:^|_)(.)/) { $1.upcase }[1..self.size]
-  end
 end
