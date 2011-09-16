@@ -1,5 +1,7 @@
+# encoding: utf-8
 require 'rubygems'
 require 'bundler'
+
 begin
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
@@ -15,10 +17,11 @@ Jeweler::Tasks.new do |gem|
   gem.name = "hominid"
   gem.homepage = "http://github.com/terra-firma/hominid"
   gem.license = "MIT"
-  gem.summary = %Q{Hominid is a Ruby wrapper for the Mailchimp API}
+  gem.summary = %Q{Ruby gem for interacting with the Mailchimp API.}
   gem.description = %Q{Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp email marketing service API.}
   gem.email = "brian@terra-firma-design.com"
   gem.authors = ["Brian Getting"]
+  # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
 
@@ -34,6 +37,7 @@ Rcov::RcovTask.new do |test|
   test.libs << 'test'
   test.pattern = 'test/**/test_*.rb'
   test.verbose = true
+  test.rcov_opts << '--exclude "gems/*"'
 end
 
 task :default => :test
@@ -41,7 +45,6 @@ task :default => :test
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
-
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "hominid #{version}"
   rdoc.rdoc_files.include('README*')
