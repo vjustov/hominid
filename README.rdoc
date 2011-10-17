@@ -4,7 +4,7 @@ Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp
 
 == Requirements
 
-You will need a {Mailchimp}[http://eepurl.com/ew8J] account. Once you have your Mailchimp account set up, you will need to {generate an API key}[http://admin.mailchimp.com/account/api/] in order to get started using Hominid.
+You will need a {Mailchimp}[http://eepurl.com/ew8J] account. Once you have your Mailchimp account set up, you will need to {generate an API key}[http://admin.mailchimp.com/account/api/] in order to get started using Hominid _(or you can use OAuth2 as well)_.
 
 == Installation
 
@@ -58,6 +58,10 @@ Hominid includes some finder methods for campaigns (see Hominid::Campaign) and l
   h.find_list_by_name('my_mailing_list')
   h.find_list_id_by_name('my_mailing_list')
   h.find_campaigns_by_list_name('my_mailing_list')
+
+== Travis Build Status
+
+{<img src="http://travis-ci.org/terra-firma/hominid.png" />}[http://travis-ci.org/terra-firma/hominid]
 
 == Contributing to Hominid
  
