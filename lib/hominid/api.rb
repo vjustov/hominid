@@ -48,7 +48,9 @@ module Hominid
   end
   
   class APIError < StandardError
+    attr_accessor :fault_code
     def initialize(error)
+      self.fault_code = error.faultCode
       super("<#{error.faultCode}> #{error.message}")
     end
   end
