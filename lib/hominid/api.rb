@@ -2,14 +2,14 @@ module Hominid
   class API
     # Blank Slate
     instance_methods.each do |m|
-      undef_method m unless m.to_s =~ /^__|object_id|method_missing|respond_to?|to_s|inspect/
+      undef_method m unless m.to_s =~ /^__|object_id|method_missing|respond_to?|to_s|inspect|kind_of?|should|should_not/
     end
     
     include Hominid::Campaign
     include Hominid::List
     include Hominid::Security
     
-    # MailChimp API Documentation: http://www.mailchimp.com/api/1.3/
+    # MailChimp API Documentation: http://apidocs.mailchimp.com/api/1.3/
     MAILCHIMP_API_VERSION = "1.3"
 
     # Initialize with an API key and config options
@@ -18,13 +18,14 @@ module Hominid
       dc = api_key.split('-').last
       defaults = {
         :api_version        => MAILCHIMP_API_VERSION,
+        :domain             => 'api.mailchimp.com',
         :secure             => false,
         :timeout            => nil
       }
       @config = defaults.merge(config).freeze
       protocol = @config[:secure] ? 'https' : 'http'
       @api_key = api_key
-      @chimpApi = XMLRPC::Client.new2("#{protocol}://#{dc}.api.mailchimp.com/#{@config[:api_version]}/", nil, @config[:timeout])
+      @chimpApi = XMLRPC::Client.new2("#{protocol}://#{dc}.#{@config[:domain]}/#{@config[:api_version]}/", nil, @config[:timeout])
     end
 
     def method_missing(api_method, *args) # :nodoc:
