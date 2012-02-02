@@ -92,6 +92,7 @@ We use the {GitHub issue tracker}[https://github.com/terra-firma/hominid/issues]
 == Travis Build Status
 
 {<img src="http://travis-ci.org/terra-firma/hominid.png" />}[http://travis-ci.org/terra-firma/hominid]
+{<img src="http://gemnasium.com/terra-firma/hominid.png" />}[http://gemnasium.com/terra-firma/hominid]
 
 == Contributing to Hominid
  
