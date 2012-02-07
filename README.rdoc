@@ -1,4 +1,4 @@
-= Hominid
+= Hominid {<img src="http://travis-ci.org/terra-firma/hominid.png" />}[http://travis-ci.org/terra-firma/hominid] {<img src="https://gemnasium.com/terra-firma/hominid.png" alt="Dependency Status" />}[https://gemnasium.com/terra-firma/hominid]
 
 Hominid is a Ruby gem that provides a wrapper for interacting with {Mailchimp's}[http://eepurl.com/ew8J] MC, STS and Export API's.
 
@@ -88,11 +88,6 @@ You can then run the following methods:
 == Submitting an Issue
 
 We use the {GitHub issue tracker}[https://github.com/terra-firma/hominid/issues] to track bugs and features. Before submitting a bug report or feature request, check to make sure it hasn't already been submitted. You can indicate support for an existing issue by voting it up. When submitting a bug report, please include a Gist that includes a stack trace and any details that may be necessary to reproduce the bug, including your gem version, Ruby version, and operating system. Ideally, a bug report should include a pull request with failing specs.
-
-== Travis Build Status
-
-{<img src="http://travis-ci.org/terra-firma/hominid.png" />}[http://travis-ci.org/terra-firma/hominid]
-{<img src="https://gemnasium.com/terra-firma/hominid.png" alt="Dependency Status" />}[https://gemnasium.com/terra-firma/hominid]
 
 == Contributing to Hominid
  
