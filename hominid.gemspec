@@ -5,13 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{hominid}
-  s.version = "3.0.4"
+  s.version = "3.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Brian Getting}]
-  s.date = %q{2012-02-01}
+  s.date = %q{2012-08-02}
   s.description = %q{Hominid is a Ruby gem that provides a wrapper for interacting with the Mailchimp email marketing service MC, STS and Export API's.}
-  s.email = %q{brian@terra-firma-design.com}
+  s.email = %q{brian@tatem.ae}
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "hominid.gemspec",
     "lib/hominid.rb",
     "lib/hominid/api.rb",
     "lib/hominid/campaign.rb",
@@ -35,7 +36,7 @@ Gem::Specification.new do |s|
     "spec/hominid/hominid_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = %q{http://github.com/terra-firma/hominid}
+  s.homepage = %q{http://github.com/tatemae-consultancy/hominid}
   s.licenses = [%q{MIT}]
   s.require_paths = [%q{lib}]
   s.rubygems_version = %q{1.8.8}
@@ -45,25 +46,22 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_development_dependency(%q<bundler>, ["> 1.0.0"])
       s.add_development_dependency(%q<fakeweb>, [">= 0"])
-      s.add_development_dependency(%q<guard-rspec>, [">= 0"])
-      s.add_development_dependency(%q<jeweler>, ["~> 1.6.4"])
+      s.add_development_dependency(%q<jeweler>, ["> 1.6.4"])
       s.add_development_dependency(%q<simplecov>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 0"])
     else
-      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_dependency(%q<bundler>, ["> 1.0.0"])
       s.add_dependency(%q<fakeweb>, [">= 0"])
-      s.add_dependency(%q<guard-rspec>, [">= 0"])
-      s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
+      s.add_dependency(%q<jeweler>, ["> 1.6.4"])
       s.add_dependency(%q<simplecov>, [">= 0"])
       s.add_dependency(%q<rspec>, [">= 0"])
     end
   else
-    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+    s.add_dependency(%q<bundler>, ["> 1.0.0"])
     s.add_dependency(%q<fakeweb>, [">= 0"])
-    s.add_dependency(%q<guard-rspec>, [">= 0"])
-    s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
+    s.add_dependency(%q<jeweler>, ["> 1.6.4"])
     s.add_dependency(%q<simplecov>, [">= 0"])
     s.add_dependency(%q<rspec>, [">= 0"])
   end
