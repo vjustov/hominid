@@ -1,4 +1,4 @@
-Note: The official {Mailchimp gem}[http://rubygems.org/gems/mailchimp] is a better alternative to Hominid if you are starting a new project. There is a lot less data-bludgeoning because it uses JSON rather than XML, and it also includes support for the Mandrill API as well.
+Note: The official {Mailchimp gem}[https://bitbucket.org/mailchimp/mailchimp-api-ruby/] is a better alternative to Hominid if you are starting a new project.
 
 = Hominid {<img src="http://travis-ci.org/terra-firma/hominid.png" />}[http://travis-ci.org/terra-firma/hominid] {<img src="https://gemnasium.com/terra-firma/hominid.png" alt="Dependency Status" />}[https://gemnasium.com/terra-firma/hominid]
 
